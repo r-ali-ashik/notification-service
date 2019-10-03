@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<p>Dear <span th:text="${employeeName}"> Employee</span>,</p>
+
+<p>Your leave application has been approved by <span th:text="${approvedBy}">TEAM LEAD</span> for the following dates: <span style=" font-weight: bold; " th:text="${startDate}">dd-mm-yy</span> - <span style=" font-weight: bold; " th:text="${endDate}">dd-mm-yy.</span></p>
+
+<p>Regards,</p>
+<p><span th:text="${sender}">Your Company Name</span></p>
+</body>
+</html>
