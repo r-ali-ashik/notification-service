@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/")
 public class LeaveEmailController {
@@ -21,10 +23,9 @@ public class LeaveEmailController {
     }
 
     @PostMapping(value = "sendLeaveEmail", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity sendEmail(@RequestParam("template_id") String templateId,
-                                    @RequestParam("template_type") String templateType) throws JSONException {
+    public ResponseEntity sendEmail(@RequestParam("leave_id") String leaveId) throws JSONException, IOException {
 
-        emailService.prepareAndSend(templateId, templateType);
+        emailService.prepareAndSend(leaveId);
         return ResponseEntity.ok("{\"message\": \"email sent\"}");
     }
 }

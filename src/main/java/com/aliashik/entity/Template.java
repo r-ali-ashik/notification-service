@@ -18,6 +18,6 @@ public class Template {
     @Column(name = "template_id", length = 40)
     private String templateId;
 
-    @Column(name = "variables", length = 50)
+    @Column(name = "variables", length = 1000)
     private String variables;
 }
