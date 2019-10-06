@@ -1,4 +1,4 @@
-package com.aliashik.service.impl;
+package com.aliashik.util;
 
 
 import org.springframework.beans.BeansException;
@@ -18,4 +18,5 @@ public class BeanUtil implements ApplicationContextAware {
     public static <T> T getBean(Class<T> beanClass) {
         return context.getBean(beanClass);
     }
+
 }

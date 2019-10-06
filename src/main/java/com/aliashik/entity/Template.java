@@ -13,11 +13,15 @@ import javax.persistence.*;
 public class Template {
 
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    @Column(name = "template_id", length = 40)
-    private String templateId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "template_id")
+    private Integer templateId;
 
-    @Column(name = "variables", length = 1000)
+    @Column(name = "variables", length = 500)
     private String variables;
+
+    @Column(name = "template", length = 1000)
+    private String template;
+
+
 }
