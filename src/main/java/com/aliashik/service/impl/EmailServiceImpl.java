@@ -1,12 +1,13 @@
 package com.aliashik.service.impl;
 
-import com.aliashik.builder.LeaveEmailBuilder;
+import com.aliashik.builder.EmailBuilder;
 import com.aliashik.entity.Template;
 import com.aliashik.repository.TemplateRepository;
 import com.aliashik.service.EmailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,10 +15,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -33,29 +31,32 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
-    public void prepareAndSend(String leaveId) throws JSONException, IOException {
+    public void prepareAndSend(Integer templateId, JSONObject payload) throws JSONException, IOException {
 
+        Template template = templateRepository.findById(templateId).get();
 
-        //TODO fetch leaveInformation with leaveId, and store in the map, fetch leave information
-        Map<String, String> param = new HashMap<>();
-        param.put("employeeName", "Ramjan Ali");
-        param.put("approvedBy", "Nazmul Islam");
-        param.put("startDate", "Fri, 25 Jan 2019");
-        param.put("endDate", "Fri, 25 Jan 2019");
-        param.put("sender", "Dynamic Solution Innovators LTD");
-        //todo =========================================================
+        if(null == template) {
+            //TODO throw exception
+        }
 
-        Template template = templateRepository.findById(1).get();
         ObjectMapper mapper = new ObjectMapper();
         List<String> variables = Arrays.asList(mapper.readValue(template.getVariables(), String[].class));
-        log.info(variables.toString());
+
+        Iterator<String> keys = payload.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            if(!variables.contains(key)) {
+                //TODO throw exception
+            }
+
+        }
 
         MimeMessagePreparator messagePreparator = (mimeMessage) -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom("ramjan.ali.ashik@gmail.com");
             messageHelper.setTo("ramjan.ali@dsinnovators.com");
-            messageHelper.setSubject("Sample mail subject");
-            String content = new LeaveEmailBuilder().build(param, variables);
+            messageHelper.setSubject("Test Email");
+            String content = new EmailBuilder(template.getTemplate()).build(payload, variables);
             messageHelper.setText(content, true);
         };
         mailSender.send(messagePreparator);
