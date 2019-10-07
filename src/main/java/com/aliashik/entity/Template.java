@@ -24,4 +24,9 @@ public class Template {
     private String template;
 
 
+    @Column(name = "template_type", length = 10)
+    private String templateType;
+
+
+
 }
