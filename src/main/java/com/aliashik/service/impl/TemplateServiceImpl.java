@@ -38,12 +38,43 @@ public class TemplateServiceImpl implements TemplateService {
         }
         log.info(variables.toString());
 
-        Template template = new Template();
-        template.setTemplate(templateString);
-        template.setVariables(variables.toString());
+        Template template = toTemplate(templateString);
         template.setTemplateType(TemplateType.EMAIL.name());
 
         return templateRepository.save(template);
 
+    }
+
+    @Override
+    public Template updateTemplate(Integer templateId, String templateString) {
+
+        Template existingTemplate = templateRepository.findById(templateId).get();
+        if(null == existingTemplate) {
+            //TODO throw exception
+        }
+        Template template = toTemplate(templateString);
+        existingTemplate.setTemplate(template.getTemplate());
+        existingTemplate.setVariables(template.getVariables());
+
+        return templateRepository.save(existingTemplate);
+    }
+
+    private Template toTemplate(String templateString) {
+
+        String regex = "[^${\\}]+(?=})"; //regex to find word enclosed withing ${ and }
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(templateString);
+
+        JSONArray variables = new JSONArray();
+        while (matcher.find()) {
+            variables.put(matcher.group());
+        }
+        log.info(variables.toString());
+
+        Template template = new Template();
+        template.setTemplate(templateString);
+        template.setVariables(variables.toString());
+
+        return template;
     }
 }

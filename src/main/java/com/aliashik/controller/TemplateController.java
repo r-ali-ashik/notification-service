@@ -27,4 +27,15 @@ public class TemplateController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateTemplate(@RequestParam("template_id") Integer templateId,
+                                         @RequestBody String template) {
+        try {
+            return ResponseEntity.ok(templateService.updateTemplate(templateId, template));
+        } catch (Exception ex) {
+            log.error("error", ex);
+        }
+        return ResponseEntity.badRequest().build();
+    }
 }
